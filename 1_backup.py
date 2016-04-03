@@ -7,7 +7,7 @@ from sklearn.tree import DecisionTreeClassifier
 from skimage.feature import hog
 import idx2numpy
 
-def SingleDecisionTreeClassifier(pix):
+def SingleDecisionTreeClassifier():
 	print "Creating Dataset from MNIST Data"
 	start_time = time.time()
 	# training_image_data, training_label_data = loadlocal_mnist(
@@ -17,11 +17,11 @@ def SingleDecisionTreeClassifier(pix):
 	# 	images_path=os.getcwd()+'/t10k-images.idx3-ubyte', 
 	# 	labels_path=os.getcwd()+'/t10k-labels.idx1-ubyte')
 	training_image_data = idx2numpy.convert_from_file("train-images.idx3-ubyte")
-	training_image_data_hog = [hog(img, orientations=9, pixels_per_cell=(pix,pix), cells_per_block=(3, 3))
+	training_image_data_hog = [hog(img)
 					for img in training_image_data]
 	training_label_data = idx2numpy.convert_from_file("train-labels.idx1-ubyte")
 	testing_image_data = idx2numpy.convert_from_file("t10k-images.idx3-ubyte")
-	testing_image_data_hog = [hog(img, orientations=9, pixels_per_cell=(pix, pix), cells_per_block=(3, 3))
+	testing_image_data_hog = [hog(img)
 					for img in testing_image_data]
 	testing_label_data = idx2numpy.convert_from_file("t10k-labels.idx1-ubyte")
 	end_time = time.time() - start_time
@@ -42,7 +42,7 @@ def SingleDecisionTreeClassifier(pix):
 	print "It took "+ str(end_time) + " to test the data "
 
 	print '\nPrinting Accuracy'
-	print "\nTesting for Single Decision Tree Classifier with pixels per cell = ("+str(pix)+','+str(pix)+') :'
+	print "\nTesting for Single Decision Tree Classifier :"
 	print "-------------------------------------------------"
 	print "SingleDecisionTreeClassifier accuracy : "+ str(single_decision_tree_classifier_accuracy)
 
@@ -50,4 +50,4 @@ def SingleDecisionTreeClassifier(pix):
  
 
 if __name__ == '__main__':
-	SingleDecisionTreeClassifier(sys.argv[1])
+	SingleDecisionTreeClassifier()

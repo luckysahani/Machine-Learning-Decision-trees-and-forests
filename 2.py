@@ -6,33 +6,21 @@ from mlxtend.data import loadlocal_mnist
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier
 from skimage.feature import hog
+import idx2numpy
 
 def Random_Forest_Classifier(number_of_trees=100):
 	print "Creating Dataset from MNIST Data"
 	start_time = time.time()
-	training_image_data, training_label_data = loadlocal_mnist(
-		images_path=os.getcwd()+'/train-images.idx3-ubyte', 
-		labels_path=os.getcwd()+'/train-labels.idx1-ubyte')
-	testing_image_data, testing_label_data = loadlocal_mnist(
-		images_path=os.getcwd()+'/t10k-images.idx3-ubyte', 
-		labels_path=os.getcwd()+'/t10k-labels.idx1-ubyte')
+	train_images = idx2numpy.convert_from_file("train-images.idx3-ubyte")
+	training_image_data_hog = [hog(img, orientations=9, pixels_per_cell=(8, 8), cells_per_block=(3, 3))
+						for img in train_images]
+	training_label_data = idx2numpy.convert_from_file("train-labels.idx1-ubyte")
+	test_images = idx2numpy.convert_from_file("t10k-images.idx3-ubyte")
+	testing_image_data_hog = [hog(img, orientations=9, pixels_per_cell=(8, 8), cells_per_block=(3, 3))
+					   for img in test_images]
+	testing_label_data = idx2numpy.convert_from_file("t10k-labels.idx1-ubyte")
 	end_time = time.time() - start_time
 	print "It took "+ str(end_time) + " to make the dataset"
-
-	print "Creating Image Dataset using Histogram of Gradients"
-	start_time = time.time()
-	# training_image_data_hog = training_image_data
-	# testing_image_data_hog = testing_image_data
-	# training_image_data_hog = [hog(train_image, cells_per_block=(1, 1))
-	# 				for train_image in training_image_data]
-	# testing_image_data_hog = [hog(test_image, cells_per_block=(1, 1))
-	# 			   for test_image in testing_image_data]
-	training_image_data_hog = [hog(train_image, orientations=8, pixels_per_cell=(2, 2), cells_per_block=(1, 1))
-					for train_image in training_image_data]
-	testing_image_data_hog = [hog(test_image, orientations=8, pixels_per_cell=(2, 2), cells_per_block=(1, 1))
-				   for test_image in testing_image_data]
-	end_time = time.time() - start_time
-	print "It took "+ str(end_time) + " to make the HOG Images"
 
 	print '\nTraining data'
 	start_time = time.time()
