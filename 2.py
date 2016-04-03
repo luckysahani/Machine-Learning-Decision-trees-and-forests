@@ -5,12 +5,35 @@ import numpy as np
 from mlxtend.data import loadlocal_mnist
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import AdaBoostClassifier
 from skimage.feature import hog
 import idx2numpy
 
 def Random_Forest_Classifier(number_of_trees=100):
-	print "Creating Dataset from MNIST Data"
+	# print '\nTraining data'
 	start_time = time.time()
+	# random_forest_classifier = DecisionTreeClassifier(max_features=None, max_depth=None)
+	random_forest_classifier = RandomForestClassifier(n_estimators=number_of_trees)
+	random_forest_classifier.fit(training_image_data_hog, training_label_data)
+	end_time = time.time() - start_time
+	# print "It took "+ str(end_time) + " to train the classifier"
+	# print 'Training Completed'
+
+	# print '\nTesting data '
+	start_time = time.time()
+	random_forest_classifier_accuracy = random_forest_classifier.score(testing_image_data_hog, testing_label_data)
+	end_time = time.time() - start_time
+	# print "It took "+ str(end_time) + " to test the data "
+
+	# print '\n# printing Accuracy'
+	# print "\nTesting for Random Forest Classifier with Number of Trees ="+str(number_of_trees)
+	# print "-------------------------------------------------"
+	print "\nRandom Forest accuracy with number of trees = "+str(number_of_trees)+ " is "+ str(random_forest_classifier_accuracy)
+
+	return random_forest_classifier_accuracy
+ 
+
+if __name__ == '__main__':
 	train_images = idx2numpy.convert_from_file("train-images.idx3-ubyte")
 	training_image_data_hog = [hog(img, orientations=9, pixels_per_cell=(8, 8), cells_per_block=(3, 3))
 						for img in train_images]
@@ -19,45 +42,10 @@ def Random_Forest_Classifier(number_of_trees=100):
 	testing_image_data_hog = [hog(img, orientations=9, pixels_per_cell=(8, 8), cells_per_block=(3, 3))
 					   for img in test_images]
 	testing_label_data = idx2numpy.convert_from_file("t10k-labels.idx1-ubyte")
-	end_time = time.time() - start_time
-	print "It took "+ str(end_time) + " to make the dataset"
-
-	print '\nTraining data'
-	start_time = time.time()
-	# random_forest_classifier = DecisionTreeClassifier(max_features=None, max_depth=None)
-	random_forest_classifier = RandomForestClassifier(n_estimators=number_of_trees)
-	random_forest_classifier.fit(training_image_data_hog, training_label_data)
-	end_time = time.time() - start_time
-	print "It took "+ str(end_time) + " to train the classifier"
-	print 'Training Completed'
-
-	print '\nTesting data '
-	start_time = time.time()
-	match_random_forest_classifier = 0
-	unmatch_random_forest_classifier = 0
-	predicted_labels = random_forest_classifier.predict(testing_image_data_hog)
-	for i in range(0,len(testing_image_data_hog)):
-		if( testing_label_data[i] == predicted_labels[i]):
-			match_random_forest_classifier = match_random_forest_classifier + 1
-		else:
-			unmatch_random_forest_classifier = unmatch_random_forest_classifier + 1
-	random_forest_classifier_accuracy = (float) (match_random_forest_classifier )/ (match_random_forest_classifier + unmatch_random_forest_classifier)
-	# random_forest_classifier_accuracy = random_forest_classifier.score(images_test, labels_test)
-	end_time = time.time() - start_time
-	print "It took "+ str(end_time) + " to test the data "
-
-	print '\nPrinting Accuracy'
-	print "\nTesting for Random Forest Classifier with Number of Trees ="+str(number_of_trees)
-	print "-------------------------------------------------"
-	print "Random Forest accuracy : "+ str(random_forest_classifier_accuracy)
-
-	return random_forest_classifier_accuracy
- 
-
-if __name__ == '__main__':
-	number_of_trees = [10,25,50,100,500]
+	
+	number_of_trees = [1, 3, 5, 7,  10, 15, 20, 25, 50, 100, 250,500]
 	sum_of_accuracy = 0.0
 	for tree_count in number_of_trees:
 		sum_of_accuracy +=Random_Forest_Classifier(tree_count)
 	average_accuracy = sum_of_accuracy/len(number_of_trees)
-	print "Random Forest average accuracy : "+ str(average_accuracy)
+	print "\nRandom Forest average accuracy : "+ str(average_accuracy)

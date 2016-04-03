@@ -8,22 +8,12 @@ from skimage.feature import hog
 import idx2numpy
 
 def SingleDecisionTreeClassifier(pix):
-	print "Creating Dataset from MNIST Data"
+	print "\nCreating HOG Dataset from MNIST Data"
 	start_time = time.time()
-	# training_image_data, training_label_data = loadlocal_mnist(
-	# 	images_path=os.getcwd()+'/train-images.idx3-ubyte', 
-	# 	labels_path=os.getcwd()+'/train-labels.idx1-ubyte')
-	# testing_image_data, testing_label_data = loadlocal_mnist(
-	# 	images_path=os.getcwd()+'/t10k-images.idx3-ubyte', 
-	# 	labels_path=os.getcwd()+'/t10k-labels.idx1-ubyte')
-	training_image_data = idx2numpy.convert_from_file("train-images.idx3-ubyte")
 	training_image_data_hog = [hog(img, orientations=9, pixels_per_cell=(pix,pix), cells_per_block=(3, 3))
 					for img in training_image_data]
-	training_label_data = idx2numpy.convert_from_file("train-labels.idx1-ubyte")
-	testing_image_data = idx2numpy.convert_from_file("t10k-images.idx3-ubyte")
 	testing_image_data_hog = [hog(img, orientations=9, pixels_per_cell=(pix, pix), cells_per_block=(3, 3))
 					for img in testing_image_data]
-	testing_label_data = idx2numpy.convert_from_file("t10k-labels.idx1-ubyte")
 	end_time = time.time() - start_time
 	print "It took "+ str(end_time) + " to make the HOG Images"
 
@@ -40,14 +30,24 @@ def SingleDecisionTreeClassifier(pix):
 	single_decision_tree_classifier_accuracy = single_decision_tree_classifier.score(testing_image_data_hog, testing_label_data)
 	end_time = time.time() - start_time
 	print "It took "+ str(end_time) + " to test the data "
-
-	print '\nPrinting Accuracy'
+# 
+	print '\n# printing Accuracy'
 	print "\nTesting for Single Decision Tree Classifier with pixels per cell = ("+str(pix)+','+str(pix)+') :'
 	print "-------------------------------------------------"
-	print "SingleDecisionTreeClassifier accuracy : "+ str(single_decision_tree_classifier_accuracy)
+	print "\nSingleDecisionTreeClassifier accuracy for ("+str(pix)+','+str(pix)+") : "+ str(single_decision_tree_classifier_accuracy)
 
 	return single_decision_tree_classifier_accuracy
  
 
 if __name__ == '__main__':
-	SingleDecisionTreeClassifier(sys.argv[1])
+	training_image_data = idx2numpy.convert_from_file("train-images.idx3-ubyte")
+	training_label_data = idx2numpy.convert_from_file("train-labels.idx1-ubyte")
+	testing_image_data = idx2numpy.convert_from_file("t10k-images.idx3-ubyte")
+	testing_label_data = idx2numpy.convert_from_file("t10k-labels.idx1-ubyte")
+	print "Started"
+	pixel_array = [4,5,6,7,8,9]
+	sum_of_accuracy = 0.0
+	for pix in pixel_array:
+		sum_of_accuracy +=SingleDecisionTreeClassifier(pix)
+	average_accuracy = sum_of_accuracy/len(pixel_array)
+	print "\nSingle Decison Tree average accuracy : "+ str(average_accuracy)

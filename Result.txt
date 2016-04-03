@@ -1,0 +1,26 @@
+Part A
+----------------------------------------------------
+SingleDecisionTreeClassifier accuracy for (6,6) : 0.8527
+SingleDecisionTreeClassifier accuracy for (7,7) : 0.849
+SingleDecisionTreeClassifier accuracy for (8,8) : 0.829
+
+
+Part B
+----------------------------------------------------
+Random Forest accuracy with number of trees = 1 is 0.7523
+Random Forest accuracy with number of trees = 3 is 0.8242
+Random Forest accuracy with number of trees = 5 is 0.8695
+Random Forest accuracy with number of trees = 7 is 0.8938
+Random Forest accuracy with number of trees = 10 is 0.9121
+Random Forest accuracy with number of trees = 15 is 0.9252
+Random Forest accuracy with number of trees = 20 is 0.9299
+Random Forest accuracy with number of trees = 25 is 0.9373
+Random Forest accuracy with number of trees = 50 is 0.9433
+Random Forest accuracy with number of trees = 100 is 0.9455
+Random Forest accuracy with number of trees = 250 is 0.9487
+Random Forest accuracy with number of trees = 500 is 0.9497
+
+Part C
+----------------------------------------------------
+I observed that around after 300 number of trees, the accuracy was increasing very slowly. So, I iterated
+and calculated the accuracy at the respective depth's. The accuracy is given below:

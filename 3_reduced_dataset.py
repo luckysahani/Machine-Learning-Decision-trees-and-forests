@@ -5,6 +5,7 @@ import numpy as np
 from mlxtend.data import loadlocal_mnist
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import AdaBoostClassifier
+from sklearn.ensemble import RandomForestClassifier
 from skimage.feature import hog
 import idx2numpy
 
@@ -19,7 +20,7 @@ def find_best_adaboost_classifier(number_of_trees,max_depth):
 	adaboost_classifier.fit(training_image_data_hog, training_label_data)
 
 	adaboost_classifier_accuracy = adaboost_classifier.score(testing_image_data_hog, testing_label_data)
-	print "\Adaboost classifier accuracyfor max_depth="+str(max_depth)+" and number of trees = "+ str(number_of_trees)+" is "+ str(single_decision_tree_classifier_accuracy)
+	print "\Adaboost classifier accuracyfor max_depth="+str(max_depth)+" and number of trees = "+ str(number_of_trees)+" is "+ str(adaboost_classifier_accuracy)
 	
 	if max_depth in best_accuracy_adaboost:
 		if  best_accuracy_adaboost[max_depth] < adaboost_classifier_accuracy:
@@ -57,12 +58,17 @@ if __name__ == '__main__':
 	testing_label_data = idx2numpy.convert_from_file("t10k-labels.idx1-ubyte")
 	print "Dataset is complete"
 
+	training_image_data_hog = training_image_data_hog[:1000]
+	training_label_data = training_label_data[:1000]
+	testing_label_data = testing_label_data[:100]
+	testing_image_data_hog = testing_image_data_hog[:100]
+
 	depth_array = [5,6,7]
 	number_of_trees_array = [310,350,390]
 	for depth in depth_array:
 		for number_of_trees in number_of_trees_array :
-			find_best_adaboost_classifier(number_of_trees,depth)
 			find_best_random_forest_classifier(number_of_trees,depth)
+			find_best_adaboost_classifier(number_of_trees,depth)
 
 	for key, value in best_accuracy_adaboost.iteritems():
 		print "Best accuracy in adaboost with depth = "+str(key)+" is "+str(value)
